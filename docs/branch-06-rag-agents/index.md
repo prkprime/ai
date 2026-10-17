@@ -30,7 +30,7 @@ After this branch, you can:
   Trace how attention combines token information before you compare bi-encoders and cross-encoders.
 - [Branch 5 notes, subtopic 5.2: instruction tuning and fine-tuned assistants](../branch-05-llm-fine-tuning/notes.md).
   Apply an instruction template and distinguish assistant output from trusted application instructions.
-- [Branch 5 notes: LLM prompting and evaluation context](../branch-05-llm-fine-tuning/notes.md).
+- [Branch 5 notes, subtopics 5.2 and 5.3: adaptation objectives and controlled evaluation](../branch-05-llm-fine-tuning/notes.md).
   Separate a prompt change from a parameter update.
 - Use Python functions, dictionaries, NumPy arrays, and virtual environments without additional scaffolding.
 

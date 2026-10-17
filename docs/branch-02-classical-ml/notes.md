@@ -327,7 +327,7 @@ Do not encode a category with its full-dataset target average before cross-valid
 Read the [categorical-feature documentation](https://catboost.ai/docs/en/features/categorical-features) for conditions under which the library chooses one-hot encoding.
 
 ```mermaid
-flowchart LR
+flowchart TD
     A["Training rows only"] --> B["Fit preprocessing or bins"]
     B --> C["Current raw predictions"]
     C --> D["Compute gradients and Hessians"]
@@ -400,7 +400,7 @@ $$
 
 A unit direction $v$ has projected sample variance $v^TSv$.
 Maximize this quantity under $v^Tv=1$.
-The Lagrangian is $\mathcal L(v,\mu)=v^TSv-\mu(v^Tv-1)$.
+Introduce a Lagrange multiplier $\mu$ — a scalar that charges constraint violations — and form the Lagrangian $\mathcal L(v,\mu)=v^TSv-\mu(v^Tv-1)$.
 Its derivative gives $2Sv-2\mu v=0$, hence $Sv=\mu v$.
 The first principal direction is an eigenvector for the largest eigenvalue.
 Subsequent directions maximize variance subject to orthogonality to earlier directions.
@@ -446,6 +446,7 @@ H(P_i)=-\sum_{j\ne i}p_{j|i}\log_2p_{j|i}.
 $$
 
 Perplexity behaves like an effective neighborhood size, not a number of clusters.
+This entropy-based quantity is unrelated to the language-model perplexity of Branch 1.2, which exponentiates a mean negative log-likelihood; only the name is shared.
 Symmetrize with $p_{ij}=(p_{j|i}+p_{i|j})/(2n)$.
 In the embedding, define Student-t affinities
 
@@ -658,7 +659,8 @@ $$
 $$
 
 Here $\theta$ includes the model parameters and $\eta_t$ is the learning rate.
-For a smooth convex objective with gradient Lipschitz constant $L$, a conservative constant step is $0<\eta\leq1/L$.
+For a smooth convex objective, call the gradient $L$-Lipschitz when $\|\nabla J(x)-\nabla J(y)\|_2\le L\|x-y\|_2$ for all $x,y$; $L$ bounds how fast the gradient can change.
+A conservative constant step is then $0<\eta\leq1/L$.
 This is a sufficient rule, not a universal step-size law for nonsmooth L1 penalties.
 Proximal gradient handles an L1 term by a smooth gradient step followed by soft thresholding.
 

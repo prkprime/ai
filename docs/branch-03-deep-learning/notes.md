@@ -725,6 +725,14 @@ For $g=(3,4)$ and norm threshold one, norm clipping gives $(0.6,0.8)$.
 Value clipping at one gives $(1,1)$, whose norm is $\sqrt2$.
 Clipping is a safeguard, not a substitute for finding a persistent source of instability.
 
+### Dropout as a training-time regularizer
+
+Dropout zeroes each activation independently with probability $p$ during training and scales the survivors by $1/(1-p)$ so the expected activation is unchanged.
+This is inverted dropout: the training pass carries the correction, so inference needs no adjustment.
+At evaluation time dropout is disabled and acts as the identity.
+Transformers apply dropout to attention weights and to sublayer outputs (Branch 4), and LoRA exposes a dropout probability on its adapter path (Branch 5).
+Large language models typically use small values, 0.0 to 0.1, because pretraining data volume already regularizes them.
+
 ### Common pitfalls
 
 - Adding L2 to the loss and calling it AdamW changes the update.

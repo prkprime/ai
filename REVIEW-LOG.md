@@ -135,6 +135,58 @@ C1-C4: PASS — C4 WARN (above) resolved by the pin.
 COUNT VERIFICATION: hours 8; problems 12 (8+4); solutions 12; snippets 11; diagrams 5; videos 4 (+4 embeds); sources 24; all match.
 ```
 
+## Post-review rendering QA and deployment (2026-10-17)
+
+- Visual QA (headless Chromium screenshots, parent) found Branch 1 solutions rendered raw `$$...$$`
+  math because `pymdownx.arithmatex` only converts `$$` blocks starting at column 0, and Python-Markdown
+  split numbered steps around indented math (step numbers also restarted).
+- Fix (commit 34423fa, `branch-01: Fix display math rendering in solutions`): move display math to top
+  level, convert step numbers to bold labels, dedent continuation prose; fenced code blocks verified
+  untouched (indentation preserved in rendered HTML).
+- Independent rendered-HTML review (GPT-6.1, screenshots + DOM/CSS across 8 routes): **PASS**.
+  R1-R7 pass (code scroll without page overspill; no raw math; Mermaid renders as SVG; players inside
+  content column at 560x315; solutions closed by default and render math/code when opened; mobile
+  390px without horizontal scroll; 5 internal destinations 200).
+  Non-blocking issues: two wide Mermaid flows render very small (B6 retrieval pipeline, B2 boosting
+  pipeline) and B6 HNSW subgraph titles overlap.
+- Deployment: repo published at https://github.com/prkprime/ai (public; Pages requires public on the
+  free plan). GitHub Pages with Actions build type; deploy runs 38988725940 (site) green.
+  Live at **https://prkprime.dev/ai/** (custom domain inherited from the user site; verified 200,
+  fresh build, 98 MathJax elements on the B1 problems page).
+
+## Cross-cutting gap and richness reviews (2026-10-17)
+
+Two independent reviewers (GLM-5.3) covered branches 1-4 and 5-8 for correctness spot-checks, richness
+against the hour budget, and knowledge-gap continuity of the prerequisite chain.
+
+- Branches 1-4: **PASS**. Spot-checks recomputed (projection/MAP/perplexity/dense backward, Ridge/XGB
+  gain/Brier decomposition, backprop/Xavier/AdamW/conv arithmetic, attention/RoPE/KV-cache/parameter
+  counts). No contradictions; dependency chain B1->B4 sound; softmax-derivative repetition in B3 judged
+  spaced repetition.
+- Branches 5-8: **PASS**. 20+ recomputations (Chinchilla budget, LoRA counts, DPO derivation, BM25/RRF/PQ,
+  KV memory scales, speculative decoding, Elo/ECE/watermark). Seams B4->B5, KV cache (B4/B7), quantization
+  (B5/B7) verified from both sides.
+
+Non-blocking gaps fixed after the reviews:
+
+- B4 4.2: added "From logits to text: decoding modes" (greedy, temperature formula, top-k/top-p,
+  determinism caveat) - previously used in B5/B6/B7 without introduction.
+- B3 3.2: added a dropout definition (train-time zeroing with inverted scaling, disabled at eval) -
+  previously used in B4/B5 without introduction.
+- B2: defined the Lipschitz constant before the eta<=1/L rule; disambiguated t-SNE perplexity from
+  language-model perplexity; introduced the Lagrange multiplier at first use in the PCA derivation.
+- B5: defined reward hacking at first use; expanded mixture-of-experts beyond a caveat sentence.
+- B5 prerequisites: added Branch 4 4.1 (tokenization and chat templates).
+- B6: defined MRR and nDCG; relabeled the Branch 5 prerequisite bullet; fixed the two Mermaid diagrams
+  flagged by the rendered-HTML review (retrieval pipeline and boosting pipeline now vertical flows;
+  HNSW subgraph titles shortened so they no longer overlap).
+- B1 1.1: forward pointer from the attention-backward section to Branch 4.
+- B4 4.1: bridge paragraph connecting subword segmentation to morphology and word boundaries.
+
+Accepted as-is (recorded decisions): B8 8.2 pacing (interpretability breadth against a 2-hour budget),
+B5 5.1 FlashAttention recap as deliberate seam reinforcement, B1/B3 softmax-derivative repetition as
+spaced repetition.
+
 ## Final validation (parent)
 
 - URL link check across all docs (2026-10-16, post-fixes): **215 checked, 215 ok, 0 broken**.

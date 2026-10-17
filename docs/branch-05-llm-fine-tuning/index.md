@@ -19,6 +19,8 @@ Use the [syllabus home](../index.md) to place this branch in the full path.
 
 ## Prerequisites
 
+- [Branch 4, §4.1: tokenization and chat templates](../branch-04-transformers-nlp/notes.md).
+  Explain how instruction data is tokenized and where role boundaries come from.
 - [Branch 4, §4.2: attention and language-model objectives](../branch-04-transformers-nlp/notes.md).
   Trace causal attention and shifted next-token cross-entropy before starting.
 - [Branch 3, §3.2: AdamW and mixed precision](../branch-03-deep-learning/notes.md).

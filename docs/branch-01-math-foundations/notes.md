@@ -291,6 +291,8 @@ For masked token losses, divide by the count of included tokens, not by padded s
 
 ### Attention backward shapes
 
+This matrix computation is the scaled dot-product attention you will meet again in Branch 4; here the goal is the gradient bookkeeping.
+
 Use one attention head without batch dimensions:
 
 $$

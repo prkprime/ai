@@ -13,7 +13,7 @@ An agentic controller selects actions, observes results, and decides whether to 
 Each boundary has a separate contract and a separate failure mode.
 
 ```mermaid
-flowchart LR
+flowchart TD
     D["Documents"] --> C["Chunk and attach provenance"]
     C --> E["Embed and index"]
     Q["User query"] --> S["Sparse and dense retrieval"]
@@ -277,15 +277,15 @@ A query descends from a sparse entry layer, then performs a broader candidate se
 
 ```mermaid
 flowchart TB
-    subgraph L2["Layer 2: sparse routing"]
+    subgraph L2["Layer 2"]
         A2["A"] --- F2["F"]
     end
-    subgraph L1["Layer 1: intermediate routing"]
+    subgraph L1["Layer 1"]
         A1["A"] --- C1["C"]
         C1 --- F1["F"]
         F1 --- H1["H"]
     end
-    subgraph L0["Layer 0: all indexed vectors"]
+    subgraph L0["Layer 0"]
         A0["A"] --- B0["B"]
         B0 --- C0["C"]
         C0 --- D0["D"]
@@ -298,6 +298,7 @@ flowchart TB
 ```
 
 The diagram illustrates the subset relation between layers, not a complete production graph.
+Layer 2 is the sparse routing layer, Layer 1 provides intermediate routing, and Layer 0 holds all indexed vectors.
 The same label represents the same vector at different layers.
 Actual HNSW graphs include additional edges and randomized level assignments.
 
@@ -593,7 +594,7 @@ No reranker can select a relevant document that never enters its candidate set.
 If each pair costs an illustrative 3 ms serially, 30 pairs cost about 90 ms before overhead.
 Batching can improve throughput, but request latency depends on hardware, sequence length, and queueing.
 Compare end-to-end p50 and p95 latency, not only model kernel time.
-Use labeled ranking metrics such as nDCG or MRR alongside answer-quality measurements.
+Use labeled ranking metrics alongside answer-quality measurements: mean reciprocal rank (MRR) averages the inverse rank of the first relevant document, and normalized discounted cumulative gain (nDCG) credits relevant documents near the top of the list more than lower positions.
 Record the candidate depth whenever you compare rerankers.
 
 ### Query expansion

@@ -77,6 +77,10 @@ A large vocabulary shortens common strings but adds parameters and leaves more r
 Vocabulary design also changes the unit of a context window.
 A 4,096-token budget does not represent a fixed number of words or characters.
 
+Subword units sit between characters and words, so they interact with linguistic structure: recurring stems and affixes appear as shared pieces in morphologically rich languages, and word-boundary markers keep languages without spaces segmentable.
+A tokenizer therefore encodes a learned, statistical morphology rather than a linguistic dictionary.
+When you debug spelling or agreement errors, inspect how the text fragmented before assuming a reasoning failure.
+
 ### Byte-Pair Encoding: learn repeated adjacent pairs
 
 Byte-Pair Encoding, or BPE, builds a vocabulary through repeated pair merges.
@@ -201,7 +205,7 @@ The `[a,b]` path receives posterior mass $0.09/0.49\approx0.1837$.
 The expected count of `ab` is therefore 0.8163, while `a` and `b` each receive 0.1837 for this item.
 These fractional counts, summed across the corpus, drive the next probability update.
 
-At inference, Viterbi decoding finds the most probable segmentation.
+At inference, Viterbi decoding — a dynamic program over token boundaries — finds the most probable segmentation.
 Sampling from the segmentation distribution instead provides subword regularization during training.
 Do not confuse the most probable single path with the marginal probability of the entire string.
 The marginal sums over paths; the Viterbi result chooses one.
@@ -1109,6 +1113,15 @@ Architecture and objective interact, but a family name is not a complete model s
 Normalization, activation, position mechanism, tokenization, and parameter tying also matter.
 Instruction fine-tuning changes data and losses without necessarily changing these core attention paths.
 Branch 5 builds on this separation.
+
+### From logits to text: decoding modes
+
+A decoder-only model assigns a logit to every vocabulary token at each position, and a decoding rule selects the next token.
+Greedy decoding takes the largest logit.
+Temperature divides the logits before the softmax: $p_i\propto\exp(z_i/T)$, so $T<1$ sharpens the distribution, $T>1$ flattens it, and $T=1$ leaves it unchanged.
+Top-k sampling restricts candidates to the $k$ largest probabilities; top-p, or nucleus sampling, takes the smallest set whose cumulative probability exceeds $p$.
+The limit $T\to0$ approaches greedy decoding and is treated as deterministic per forward pass, but batched kernels and floating-point nondeterminism mean the same request can still differ across runs or hardware.
+Serving stacks expose these controls per request; Branch 7 covers the serving-side parameters, and Branch 8 covers calibration and evaluation of sampled outputs.
 
 ### Parameter counting: state the conventions first
 

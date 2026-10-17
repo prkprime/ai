@@ -51,6 +51,9 @@ The factor six approximates a forward pass and its backward pass over dense para
 It omits details such as long-context attention, embeddings, activation recomputation, and optimizer work.
 It is a planning estimate, not a profiler.
 For a mixture-of-experts model, total stored parameters and parameters active per token differ.
+A learned router sends each token to a small subset of experts, so most stored weights stay idle for any single token.
+Report both numbers: memory is sized by stored parameters, while compute and latency track active parameters.
+Compare routing quality and expert load balance against a dense model of similar active size.
 Do not insert the total stored parameter count into this dense estimate without qualification.
 
 Parameter count also depends on convention.
@@ -949,7 +952,7 @@ $$
 
 Here $\beta>0$ controls pressure to stay near the reference.
 Larger $\beta$ penalizes deviations more strongly in this reward-optimization objective.
-This discourages reward hacking and excessive drift, but it does not guarantee safety.
+This discourages reward hacking — the policy raising its measured reward while degrading the behavior the reward was meant to proxy — and excessive drift, but it does not guarantee safety.
 The reference must use the same response support and tokenization.
 
 PPO, or proximal policy optimization, performs policy updates using sampled rollouts and estimated advantages.
