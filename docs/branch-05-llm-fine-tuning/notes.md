@@ -123,9 +123,10 @@ The empirical near-equal scaling of $N$ and $D$ motivates the simple twenty-to-o
 Combining the rule with the dense compute approximation gives
 
 $$
-C \approx 6N(20N)=120N^2,
-\qquad
-N \approx \sqrt{C/120}.
+\begin{aligned}
+C &\approx 6N(20N)=120N^2,\\
+N &\approx \sqrt{C/120}.
+\end{aligned}
 $$
 
 Check dimensions: parameters and tokens are counts, and the factor six represents FLOPs per parameter-token pair.
@@ -552,7 +553,7 @@ At the standard initialization, $A$ receives exactly zero gradient on the first 
 ### Diagram: adapter injection
 
 ```mermaid
-flowchart LR
+flowchart TD
     X["Input x"] --> W["Frozen W: d_in to d_out"]
     X --> A["Trainable A: d_in to r"]
     A --> B["Trainable B: r to d_out"]
@@ -967,7 +968,13 @@ The reference must use the same response support and tokenization.
 
 PPO, or proximal policy optimization, performs policy updates using sampled rollouts and estimated advantages.
 Its clipped surrogate limits the incentive for large probability-ratio changes in one update.
-The objective is $\mathcal L^{\mathrm{CLIP}}=\mathbb E[\min(r_tA_t,\operatorname{clip}(r_t,1-\epsilon,1+\epsilon)A_t)]$ with $r_t=\pi_\theta/\pi_{\theta_{\mathrm{old}}}$.
+The objective is
+
+$$
+\mathcal L^{\mathrm{CLIP}}=\mathbb E[\min(r_tA_t,\operatorname{clip}(r_t,1-\epsilon,1+\epsilon)A_t)]
+$$
+
+with $r_t=\pi_\theta/\pi_{\theta_{\mathrm{old}}}$.
 With $r=1.5$, $\epsilon=0.2$, and $A=1$, the minimum selects $1.2$, so the incentive stops growing beyond a 20% ratio change.
 Practical RLHF systems may also train a value model to reduce variance.
 Reward-model inference, policy rollouts, reference log-probabilities, and optimization all add operational cost.

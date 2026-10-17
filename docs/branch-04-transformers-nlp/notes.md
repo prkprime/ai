@@ -345,7 +345,12 @@ $$
 
 The sigmoid is $\sigma(t)=1/(1+e^{-t})$.
 The positive term raises the observed pair's dot product.
-As a check, a positive pair with score $2$ and one negative with score $-1$ gives $\mathcal L_{SGNS}=-\log\sigma(2)-\log\sigma(1)\approx0.127+0.313=0.440$.
+As a check, a positive pair with score $2$ and one negative with score $-1$ gives
+
+$$
+\mathcal L_{SGNS}=-\log\sigma(2)-\log\sigma(1)\approx0.127+0.313=0.440.
+$$
+
 Each negative term lowers a sampled pair's dot product.
 The original practical noise distribution often uses unigram frequencies raised to the $3/4$ power and renormalized.
 Noise words need not be linguistically incompatible with the center word; they are samples from that distribution.
@@ -467,7 +472,7 @@ No finite-width implementation should exponentiate huge raw logits unnecessarily
 ### Attention flow diagram
 
 ```mermaid
-flowchart LR
+flowchart TD
     X["Input X: B × n × d"] --> Q["Query projection Q"]
     X --> K["Key projection K"]
     X --> V["Value projection V"]
@@ -994,15 +999,15 @@ Unlike a rotary transform, the bias changes scores directly and does not preserv
 
 ```mermaid
 flowchart TD
-    P["How does position enter the model?"] --> ADD["Add a vector to token embeddings"]
-    P --> ROT["Rotate query and key feature pairs"]
-    P --> BIAS["Add a scalar to each attention score"]
-    ADD --> SIN["Sinusoidal: fixed frequency basis"]
-    ADD --> LEARN["Learned absolute: trainable index table"]
-    ROT --> ROPE["RoPE: relative phase in dot products"]
-    ROPE --> EXT["NTK-aware or YaRN: alter frequency behavior"]
-    BIAS --> T5["T5: learned distance buckets"]
-    BIAS --> ALI["ALiBi: fixed head-specific linear slopes"]
+    P["Position information"] --> ADD["Add to embeddings"]
+    P --> ROT["Rotate Q and K"]
+    P --> BIAS["Bias attention scores"]
+    ADD --> SIN["Sinusoidal"]
+    ADD --> LEARN["Learned absolute"]
+    ROT --> ROPE["RoPE"]
+    ROPE --> EXT["NTK-aware / YaRN"]
+    BIAS --> T5["T5 relative bias"]
+    BIAS --> ALI["ALiBi"]
 ```
 
 This classification separates the location of the operation from the length-extension claim.

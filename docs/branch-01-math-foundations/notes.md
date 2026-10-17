@@ -99,7 +99,7 @@ This can amplify numerical error.
 For rank-deficient $A$, the projector is $AA^+$, where $A^+$ is the Moore–Penrose pseudoinverse.
 
 ```mermaid
-flowchart LR
+flowchart TD
     B["Target b"] --> P["Project onto column space of A"]
     P --> H["Closest point: A x_hat"]
     B --> R["Residual: b minus A x_hat"]
@@ -346,7 +346,7 @@ Sum the three paths because the same $X$ supplies all three projections.
 Problem B1 checks the unmasked single-head formulas numerically.
 
 ```mermaid
-flowchart LR
+flowchart TD
     X["Input X"] --> Q["Q = X W_Q"]
     X --> K["K = X W_K"]
     X --> V["V = X W_V"]
@@ -447,7 +447,11 @@ For Bernoulli $X$, $X^2=X$.
 Therefore $\mathbb EX=\theta$ and $\operatorname{Var}(X)=\theta(1-\theta)$.
 At $\theta=0.25$, the variance is $0.1875$.
 For independent variables, variances add.
-In general, $\operatorname{Var}(X+Y)=\operatorname{Var}(X)+\operatorname{Var}(Y)+2\operatorname{Cov}(X,Y)$.
+In general,
+
+$$
+\operatorname{Var}(X+Y)=\operatorname{Var}(X)+\operatorname{Var}(Y)+2\operatorname{Cov}(X,Y).
+$$
 Ignoring the covariance term can substantially understate uncertainty.
 
 ### Likelihood and Bernoulli MLE
@@ -626,7 +630,7 @@ The two right-hand terms sum to $0.836988$ after rounding.
 Reversing the distributions gives a different divergence.
 
 ```mermaid
-flowchart LR
+flowchart TD
     D["Observed labels or tokens"] --> N["Mean negative log-likelihood"]
     P["True distribution p"] --> H["Entropy H of p"]
     P --> K["Forward KL from p to q"]

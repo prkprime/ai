@@ -99,7 +99,7 @@ The last sentence attempts to hide the conflict from the user.
 No malicious executable code is necessary: the attack acts through language.
 
 ```mermaid
-flowchart LR
+flowchart TD
     A["Attacker edits external handbook"] --> B["Retriever returns handbook-17"]
     U["User asks opening time"] --> C["Assistant reads evidence"]
     B --> C
@@ -522,17 +522,22 @@ No single benchmark measures general safety, intelligence, and deployment suitab
 ```mermaid
 flowchart TB
     A["Deployment claim"] --> B["Capability evidence"]
-    A --> C["Safety and reliability evidence"]
-    A --> D["Internal mechanism evidence"]
-    B --> E["MMLU: multiple-choice knowledge"]
-    B --> F["GSM8K: math word problems"]
-    B --> G["HumanEval: code against tests"]
-    B --> H["Arena: human pairwise preference"]
-    C --> I["Red-team success, subgroup errors, PII leakage"]
-    C --> J["Grounding, abstention, and calibration"]
-    D --> K["Probes, heads, SAEs, and interventions"]
+    B --> E["MMLU"]
+    B --> F["GSM8K"]
+    B --> G["HumanEval"]
+    B --> H["Arena"]
 ```
 
+```mermaid
+flowchart TB
+    A["Deployment claim"] --> C["Safety evidence"]
+    A --> D["Mechanism evidence"]
+    C --> I["Red team, subgroups, PII"]
+    C --> J["Grounding and calibration"]
+    D --> K["Probes, heads, SAEs"]
+```
+
+Read the two diagrams as halves of the same evidence argument.
 The three branches complement rather than replace each other.
 A mechanistic explanation is not a deployment performance estimate.
 A high capability score does not authorize private-data access.

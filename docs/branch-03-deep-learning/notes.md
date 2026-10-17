@@ -35,7 +35,7 @@ For classification, retain raw output logits and pass them to cross-entropy.
 Do not apply softmax before `torch.nn.functional.cross_entropy`.
 
 ```mermaid
-flowchart LR
+flowchart TD
     X["Input x"] --> Z["z = W1 x + b1"]
     P1["Parameters W1 and b1"] --> Z
     Z --> A["a = ReLU(z)"]
@@ -926,7 +926,7 @@ When changing input resolution, learned spatial position embeddings often need i
 Keep the class-token embedding separate from the spatial grid during interpolation.
 
 ```mermaid
-flowchart LR
+flowchart TD
     I["Image B x C x H x W"] --> P["Patch projection"]
     P --> T["Patch tokens B x N x D"]
     T --> A["Prepend learned class token"]
@@ -1055,7 +1055,7 @@ The symmetric average has the same value, not twice that value.
 This toy example tests the objective; it does not model real semantic errors.
 
 ```mermaid
-flowchart LR
+flowchart TD
     I["Images"] --> IE["Image encoder"]
     T["Paired captions"] --> TE["Text encoder"]
     IE --> U["Unit image embeddings"]

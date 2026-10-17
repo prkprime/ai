@@ -51,7 +51,7 @@ Branch hours are weighted toward production-critical depth: the transformer deep
 ## Dependency map
 
 ```mermaid
-flowchart LR
+flowchart TD
     B1[1 Math & Prod Eng] --> B2[2 Classical ML]
     B1 --> B3[3 Deep Learning]
     B2 --> B3

@@ -1,0 +1,41 @@
+/* Render Mermaid diagrams at natural size and scroll locally instead of
+   shrinking labels below readable sizes. */
+.md-typeset .mermaid {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.md-typeset .mermaid svg {
+  max-width: none;
+  height: auto;
+}
+
+/* Keep table scroll wrappers inside the content column: Material's negative
+   margins can add a few pixels of page-level horizontal scroll on mobile. */
+.md-typeset__scrollwrap {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Keep MathJax's assistive MathML visually hidden without letting it extend
+   the page width on narrow screens. */
+mjx-assistive-mml {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Wide display equations scroll inside their own box instead of widening
+   the page on narrow screens. */
+mjx-container[display="true"] {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.2em;
+}

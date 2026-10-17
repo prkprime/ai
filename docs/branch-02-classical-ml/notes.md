@@ -298,7 +298,12 @@ $$
 
 For binary logistic loss using raw margins, $g_i=p_i-y_i$ and $h_i=p_i(1-p_i)$.
 As a check, a leaf with $G=-1.5$, $H=0.5$, $\lambda=1$ gives $w^*=1.0$.
-Splitting it into children with $(G_L,H_L)=(-4,1.2)$ and $(G_R,H_R)=(1,0.8)$, with $\gamma=0.5$, gives $\operatorname{Gain}=0.5(7.273+0.556-3.0)-0.5\approx1.914$.
+Splitting it into children with $(G_L,H_L)=(-4,1.2)$ and $(G_R,H_R)=(1,0.8)$, with $\gamma=0.5$, gives
+
+$$
+\operatorname{Gain}=0.5(7.273+0.556-3.0)-0.5\approx1.914.
+$$
+
 These derivatives are with respect to the raw score, not the probability.
 The formula above omits optional L1 leaf penalties and implementation constraints.
 Libraries can reject a positive-gain split if it violates a minimum-child condition.
@@ -788,9 +793,11 @@ For a binary threshold, count true positives $TP$, false positives $FP$, true ne
 Then define
 
 $$
-\operatorname{Precision}=\frac{TP}{TP+FP},\quad
-\operatorname{Recall}=\operatorname{TPR}=\frac{TP}{TP+FN},\quad
-\operatorname{FPR}=\frac{FP}{FP+TN}.
+\begin{aligned}
+\operatorname{Precision}&=\frac{TP}{TP+FP},\\
+\operatorname{Recall}=\operatorname{TPR}&=\frac{TP}{TP+FN},\\
+\operatorname{FPR}&=\frac{FP}{FP+TN}.
+\end{aligned}
 $$
 
 Specify a policy for zero denominators.

@@ -187,6 +187,43 @@ Accepted as-is (recorded decisions): B8 8.2 pacing (interpretability breadth aga
 B5 5.1 FlashAttention recap as deliberate seam reinforcement, B1/B3 softmax-derivative repetition as
 spaced repetition.
 
+## Second-pass richness and rendering pass (2026-10-17)
+
+Two independent reviewers (GLM-5.3) re-audited branches 1-4 and 5-8 for sub-section richness,
+logic/flow, and Markdown rendering risks. Both returned **PASS** with concrete enrichment targets;
+all applied:
+
+- B1: thread/process timing snippet, typed kernel/adapter sketch, density-vs-probability example,
+  corrected exercise pointer.
+- B2: GBDT gain instantiation, UMAP membership formula, hierarchical merge trace, L1/L2 geometry
+  example, schedule ordering fix.
+- B3: dropout expansion (expectation check, mask example, `F.dropout` snippet, JMLR citation),
+  ConvNeXt parameter contrast, zero-shot snippet, schedule mention.
+- B4: decoding arithmetic example, WordPiece scoring example, SentencePiece marker example, SGNS
+  loss value, KV-cache forward references, milestone link, prerequisite label normalization.
+- B5: MoE routing and Mixtral counts, Kaplan exponent arithmetic, packing utilization, PPO clip
+  objective, ORPO/KTO worked values, LoRA first-step gradient wording, training-stack diagram
+  split, session schedule fix.
+- B6: RAG objective paragraph, MRR/nDCG formulas with a worked ranking.
+- B7: Branch 6 6.3 prerequisite, affine quantizer worked error, k-quant bits-per-weight, token
+  bucket arithmetic, activation-outlier sentence.
+- B8: induction-head attention table, SAE toy loss; evidence diagram split into two.
+
+Full rendered-site audit (GPT-6.1; all 26 pages at 1280px and 390px) returned **FAIL** on two
+blocking classes; both fixed and re-verified:
+
+- Mobile horizontal overflow: wide inline and display math (plus one inline variance equation in
+  B1). Fixed by converting wide inline expressions to display math, splitting wide display equations
+  into aligned lines, enabling MathJax display line breaking, and adding container-level horizontal
+  scroll for display math. Re-measured: all eight branch notes pages are exactly 390/390 at a 390px
+  viewport (was 412px on B1).
+- Mermaid labels scaling below readable size: 12 wide horizontal flows converted to vertical, two
+  wide diagrams split, long node labels shortened on three diagrams, diagrams render at natural size
+  with local scrolling, assistive MathML clipped, table scroll wrappers constrained. All 29 diagrams
+  still render as SVG and labels are readable at desktop and mobile widths.
+- Long SSE lines (209 chars) accepted: code blocks scroll inside their own container and do not
+  widen the page.
+
 ## Final validation (parent)
 
 - URL link check across all docs (2026-10-16, post-fixes): **215 checked, 215 ok, 0 broken**.

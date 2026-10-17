@@ -56,12 +56,12 @@ Do not count all free GPU memory as available KV capacity before the runtime pro
 
 ```mermaid
 flowchart TD
-    V["Physical GPU memory"] --> W["Persistent model weights"]
-    V --> K["Live and reusable KV blocks"]
-    V --> A["Peak activations and kernel workspaces"]
-    V --> R["Runtime buffers and safety reserve"]
-    K --> L["Longer contexts increase bytes"]
-    K --> B["More live sequences increase bytes"]
+    V["Physical GPU memory"] --> W["Model weights"]
+    V --> K["KV blocks"]
+    V --> A["Activations and workspaces"]
+    V --> R["Runtime reserve"]
+    K --> L["Longer contexts: more bytes"]
+    K --> B["More sequences: more bytes"]
 ```
 
 #### Model weights
@@ -265,7 +265,7 @@ Physical blocks need not sit next to each other in GPU memory.
 The attention kernel follows the table when it gathers the keys and values needed for a query.
 
 ```mermaid
-flowchart LR
+flowchart TD
     R["Request A: logical token positions"] --> L0["Logical block 0: tokens 0 to 15"]
     R --> L1["Logical block 1: tokens 16 to 31"]
     R --> L2["Logical block 2: tokens 32 to 47"]
@@ -557,7 +557,7 @@ The inference engine owns model execution, KV allocation, and GPU scheduling.
 Observability receives evidence from each layer rather than only the final answer.
 
 ```mermaid
-flowchart LR
+flowchart TD
     C["Client: streaming consumer"] --> G["Gateway: auth, quotas, admission"]
     G --> A["Agent service: validation and tool policy"]
     A --> E["Inference engine: scheduler and KV blocks"]
