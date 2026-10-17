@@ -461,6 +461,14 @@ An induction pattern looks like `[A][B] ... [A] → [B]`.
 After seeing an earlier occurrence of A followed by B, a model predicts B when A recurs.
 In studied models, induction-head circuits can combine previous-token information with matching to an earlier context.
 This offers a concrete hypothesis for a form of in-context copying.
+For the sequence `[A][B][C][A]`, a previous-token head at position $i$ places its weight on $i-1$; an induction pair can then make the final position attend to position 0, the earlier `A`, and copy its successor `B` as the prediction.
+
+| Query position | Previous-token head attends | Induction head attends |
+|---|---|---|
+| 1 (`B`) | 0 (`A`) | — |
+| 2 (`C`) | 1 (`B`) | — |
+| 3 (`A`) | 2 (`C`) | 0 (`A`) |
+
 The Transformer Circuits induction-head article connects the pattern to model behavior and intervention evidence.
 
 To investigate such a head, compare clean repeated-pattern prompts with controlled corruptions.
@@ -488,6 +496,9 @@ One illustrative training objective is:
 $$
 \mathcal{L} = \lVert h-\hat h\rVert_2^2 + \lambda\lVert f\rVert_1.
 $$
+
+As a toy check, if $f$ has 2 nonzero entries out of 8 features, $\lVert h-\hat h\rVert_2^2=0.04$, $\lVert f\rVert_1=1.3$, and $\lambda=0.05$, then $\mathcal L=0.04+0.065=0.105$.
+Doubling $\lambda$ to $0.1$ raises the loss to $0.17$ and pushes training toward sparser features.
 
 The reconstruction term preserves information about the activation.
 The sparsity term discourages activating every feature.

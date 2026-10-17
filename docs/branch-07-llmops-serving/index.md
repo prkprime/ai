@@ -30,6 +30,8 @@ After this branch, you can:
   Revisit query heads, key/value heads, head dimension, and autoregressive decoding.
 - Read [Branch 5 notes, subtopic 5.2: fine-tuning and quantization basics](../branch-05-llm-fine-tuning/notes.md).
   Revisit precision, scaling factors, low-bit weights, and the distinction between training and inference memory.
+- Read [Branch 6 notes, subtopic 6.3: tool use and agentic loops](../branch-06-rag-agents/notes.md).
+  Revisit state graphs, tool validation, and approval boundaries before the Project 4 handoff.
 - Bring Python async/await and HTTP request/response knowledge.
   You need Python 3.11 or later for the CPU exercises.
 - For GPU labs, bring a supported accelerator, a matching driver/runtime, and sufficient memory for the selected checkpoint.

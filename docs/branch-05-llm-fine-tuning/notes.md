@@ -54,6 +54,10 @@ For a mixture-of-experts model, total stored parameters and parameters active pe
 A learned router sends each token to a small subset of experts, so most stored weights stay idle for any single token.
 Report both numbers: memory is sized by stored parameters, while compute and latency track active parameters.
 Compare routing quality and expert load balance against a dense model of similar active size.
+A top-$k$ router computes $G(x)=\operatorname{softmax}(\operatorname{TopK}(xW_g))$ and sends each token to the $k$ experts with the largest gate values.
+For example, Mixtral 8x7B stores about 47B parameters but activates about 13B per token with top-2-of-8 routing, roughly a quarter of its expert parameters.
+A load-balancing auxiliary loss discourages the router from collapsing onto a few experts.
+Pretraining compute then tracks $6N_{\mathrm{active}}D$ while device memory tracks $N_{\mathrm{stored}}$.
 Do not insert the total stored parameter count into this dense estimate without qualification.
 
 Parameter count also depends on convention.
@@ -77,6 +81,7 @@ L(D) \propto D^{-\alpha_D}.
 $$
 
 The paper reports fitted exponents near $\alpha_N=0.076$ and $\alpha_D=0.095$ for its setup.
+For intuition, doubling model size multiplies loss by $2^{-0.076}\approx0.949$, about a 5% reduction, and a tenfold data increase multiplies loss by $10^{-0.095}\approx0.804$, about a 20% reduction.
 These are empirical fits over particular architectures, datasets, and training procedures.
 They are not universal constants.
 The irreducible loss floor also matters when extrapolating far beyond the fitted range.
@@ -312,13 +317,17 @@ flowchart TD
     C --> D["Exact and MinHash near-deduplication"]
     D --> E["Source-cluster split and contamination checks"]
     E --> F["Tokenize and build data mixtures"]
-    F --> G["Pretrain modern decoder"]
+    S["Verified synthetic examples with provenance"] --> C
+```
+
+```mermaid
+flowchart TD
+    F["Tokenized data mixtures"] --> G["Pretrain modern decoder"]
     G --> H["Checkpoint and held-out LM evaluation"]
     H --> I["SFT with masked assistant targets"]
     I --> J["Preference optimization"]
     J --> K["Task, safety, and regression evaluation"]
     K --> L["Version model, tokenizer, and serving contract"]
-    S["Verified synthetic examples with provenance"] --> C
 ```
 
 Every arrow carries a versioned artifact or a reproducible transformation.
@@ -495,6 +504,7 @@ Finding a boundary by separately tokenizing a text prefix can fail when a tokeni
 Packing concatenates multiple short examples into fewer model input sequences.
 It reduces wasted padding and can increase useful supervised tokens per second.
 It does not create additional independent examples.
+For example, 1,000 examples averaging 300 tokens padded to 2,048 tokens waste about 85% of token slots; packing into 2,048-token sequences needs $\lceil300{,}000/2{,}048\rceil=147$ sequences, roughly a 14x reduction in slots.
 Count effective training exposure in tokens as well as rows.
 
 Each packed example still needs its own completion mask and end marker.
@@ -537,7 +547,7 @@ Standard initialization samples $A$ randomly and sets $B=0$.
 That makes $BA=0$ at the start, so the model initially preserves the base output.
 It also allows $B$ to receive a gradient immediately.
 If both $A$ and $B$ start at zero, both gradients vanish and the update cannot begin learning.
-At the standard initialization, $A$ often receives zero gradient on the first step because $B=0$.
+At the standard initialization, $A$ receives exactly zero gradient on the first step because $\partial L/\partial A$ carries a factor $B$.
 
 ### Diagram: adapter injection
 
@@ -957,6 +967,8 @@ The reference must use the same response support and tokenization.
 
 PPO, or proximal policy optimization, performs policy updates using sampled rollouts and estimated advantages.
 Its clipped surrogate limits the incentive for large probability-ratio changes in one update.
+The objective is $\mathcal L^{\mathrm{CLIP}}=\mathbb E[\min(r_tA_t,\operatorname{clip}(r_t,1-\epsilon,1+\epsilon)A_t)]$ with $r_t=\pi_\theta/\pi_{\theta_{\mathrm{old}}}$.
+With $r=1.5$, $\epsilon=0.2$, and $A=1$, the minimum selects $1.2$, so the incentive stops growing beyond a 20% ratio change.
 Practical RLHF systems may also train a value model to reduce variance.
 Reward-model inference, policy rollouts, reference log-probabilities, and optimization all add operational cost.
 
@@ -1168,6 +1180,8 @@ $$
 $$
 
 Combine that term with a chosen-response negative log-likelihood using a coefficient $\lambda$.
+As a check, chosen log-probability $-2$ over $|y_w|=5$ tokens gives $\bar p\approx e^{-0.4}=0.670$ and odds $2.034$; rejected log-probability $-3$ over $|y_l|=4$ gives $\bar p\approx e^{-0.75}=0.472$ and odds $0.895$.
+The log-odds ratio is $\log(2.034/0.895)\approx0.820$, so $\mathcal L_{\mathrm{OR}}\approx-\log\sigma(0.820)\approx0.365$.
 The chosen-response term anchors imitation while the odds ratio penalizes relative preference mistakes.
 Compute log-odds stably; values close to zero or one can make naive arithmetic fail.
 ORPO is not DPO with its reference tensors silently set to zero.
@@ -1192,6 +1206,7 @@ $$
 
 Let $b$ denote a detached estimate of the corresponding KL-based reference point.
 A desirable example receives utility shaped like $\sigma(r_\theta-b)$.
+For example, $r_\theta-b=0.6$ gives $\sigma(0.6)\approx0.646$.
 An undesirable example receives utility shaped like $\sigma(b-r_\theta)$.
 The loss penalizes low utility, with separate weights for desirable and undesirable examples.
 

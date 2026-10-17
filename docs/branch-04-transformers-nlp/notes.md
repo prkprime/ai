@@ -13,7 +13,7 @@ The [problems](problems.md) contain eight pen-and-paper exercises and four codin
 The examples use small dimensions so you can inspect every number.
 Production dimensions change cost, not the underlying matrix operations.
 
-Review [Branch 1 notes, subtopic 1.1: matrices and projections](../branch-01-math-foundations/notes.md) when a dimension does not match.
+Review [Branch 1 notes, subtopic 1.1: matrix algebra and projections](../branch-01-math-foundations/notes.md) when a dimension does not match.
 Review [Branch 3 notes, subtopic 3.1: autograd, softmax, and LayerNorm](../branch-03-deep-learning/notes.md) when a numerical or gradient detail is unclear.
 
 ### Running the examples
@@ -164,6 +164,7 @@ score(a,b)=\frac{freq(a,b)}{freq(a)\,freq(b)}.
 $$
 
 This ratio favors pairs that co-occur more strongly than their individual frequencies suggest.
+For example, a pair seen 30 times with $freq(a)=100$ and $freq(b)=40$ scores $30/4000=0.0075$ and can outrank a pair with a larger raw count whose individual frequencies are much larger.
 It is not BPE's raw pair count.
 It is also not a universal specification of every proprietary WordPiece trainer.
 The Hugging Face course explicitly distinguishes its reconstructed training account from published inference behavior.
@@ -215,6 +216,7 @@ The marginal sums over paths; the Viterbi result chooses one.
 SentencePiece trains tokenizers directly from raw text without requiring language-specific word segmentation.
 It supports algorithms including BPE and Unigram.
 Its visible `▁` marker commonly represents a space boundary.
+For example, encoding `hello world` yields pieces such as `▁hello` and `▁world`, and decoding maps each `▁` back to a space.
 That marker helps the token stream preserve word-boundary information.
 It does not imply that every model normalizes spaces identically.
 
@@ -343,6 +345,7 @@ $$
 
 The sigmoid is $\sigma(t)=1/(1+e^{-t})$.
 The positive term raises the observed pair's dot product.
+As a check, a positive pair with score $2$ and one negative with score $-1$ gives $\mathcal L_{SGNS}=-\log\sigma(2)-\log\sigma(1)\approx0.127+0.313=0.440$.
 Each negative term lowers a sampled pair's dot product.
 The original practical noise distribution often uses unigram frequencies raised to the $3/4$ power and renormalized.
 Noise words need not be linguistically incompatible with the center word; they are samples from that distribution.
@@ -891,7 +894,7 @@ These small examples expose sign errors that can hide in large tensor code.
 ### Snippet 5: adjacent-pair RoPE in PyTorch
 
 The input layout is $(B,h,n,d_k)$.
-The `positions` vector has length $n$ and contains the actual sequence positions, including cache offsets.
+The `positions` vector has length $n$ and contains the actual sequence positions, including cache offsets (the KV cache section below defines the cache mechanics).
 The snippet performs trigonometry in float32 and casts the result back to the input dtype.
 It expects floating-point input and an even head dimension.
 
@@ -932,7 +935,7 @@ norm preserved: True
 The fractional positions make the right-angle example easy to inspect.
 Ordinary language-model positions are integer indices.
 Rotate queries and keys using their corresponding positions before computing the dot products.
-When caching already rotated keys, do not rotate them again on every generation step.
+When caching already rotated keys, do not rotate them again on every generation step (see the KV cache section below).
 
 | RoPE tensor | Shape |
 |---|---|
@@ -1120,6 +1123,7 @@ A decoder-only model assigns a logit to every vocabulary token at each position,
 Greedy decoding takes the largest logit.
 Temperature divides the logits before the softmax: $p_i\propto\exp(z_i/T)$, so $T<1$ sharpens the distribution, $T>1$ flattens it, and $T=1$ leaves it unchanged.
 Top-k sampling restricts candidates to the $k$ largest probabilities; top-p, or nucleus sampling, takes the smallest set whose cumulative probability exceeds $p$.
+For logits $(1,2,3)$, $T=1$ gives $(0.090,0.245,0.665)$; $T=2$ gives $(0.186,0.307,0.506)$; top-k with $k=2$ renormalizes the two leaders to $(0.269,0.731)$; top-p with $p=0.6$ keeps only the leading token because $0.665>0.6$, while $p=0.9$ keeps two.
 The limit $T\to0$ approaches greedy decoding and is treated as deterministic per forward pass, but batched kernels and floating-point nondeterminism mean the same request can still differ across runs or hardware.
 Serving stacks expose these controls per request; Branch 7 covers the serving-side parameters, and Branch 8 covers calibration and evaluation of sampled outputs.
 
@@ -1284,4 +1288,4 @@ Parameter and complexity estimates turn the architecture into an engineering bud
 Complete [the problems](problems.md) and [exit criteria](index.md) before moving on.
 In [Branch 5](../branch-05-llm-fine-tuning/index.md), reuse these shapes to reason about adaptation and training memory.
 In [Branch 6](../branch-06-rag-agents/index.md), distinguish contextual token states from trained retrieval representations.
-The optional mini-transformer milestone extends this branch beyond its nine-hour core budget.
+The optional mini-transformer milestone, specified as [Project 1 in the project appendix](../index.md), extends this branch beyond its nine-hour core budget.

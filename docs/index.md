@@ -119,7 +119,7 @@ Start each one at the marked point.
 | 3 | Production hybrid RAG engine | Qdrant/Milvus, BGE reranker, Ragas, FastAPI | You can implement hybrid search (dense + BM25), cross-encoder reranking, and automated evaluation | Branch 6 |
 | 4 | High-throughput agentic service | vLLM, LangGraph, Pydantic, Langfuse | You can host models with continuous batching, execute structured tool calls, and trace agentic workflows | Branch 7 |
 
-Full specifications with acceptance criteria appear in each branch's notes and in the project appendix at the end of this page.
+Full specifications with acceptance criteria appear in the project appendix at the end of this page; branch notes point to the relevant project.
 
 ## Assessment and progression gates
 

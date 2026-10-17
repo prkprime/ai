@@ -49,8 +49,8 @@ Use the named chapter in the video player when timestamps differ by version.
 | 1–2 | 1 | 5.1 Architecture and curation | Trace the training stack; solve A2; inspect the modern-decoder comparison |
 | 2–3 | 1 | 5.2 Dataset contract | Render formats; implement B1; inspect loss masks |
 | 3–4 | 1 | 5.2 Adapter mechanics | Derive LoRA counts; solve A3; run B2 |
-| 4–5 | 1 | 5.2 Memory and configuration | Solve A4; inspect SFTTrainer and QLoRA configuration |
-| 5–5.5 | 0.5 | 5.2 Evaluation and deployment | Select hyperparameters; diagnose forgetting; complete B4 |
+| 4–5 | 1 | 5.2 Memory and configuration | Solve A4; complete B4; inspect SFTTrainer and QLoRA configuration |
+| 5–5.5 | 0.5 | 5.2 Evaluation and deployment | Select hyperparameters; diagnose forgetting |
 | 5.5–6.5 | 1 | 5.3 RLHF | Fit a pairwise reward conceptually; solve A6; watch 10 minutes on post-training in *Deep Dive into LLMs like ChatGPT* |
 | 6.5–7.5 | 1 | 5.3 DPO | Follow the derivation; solve A5; run B3 |
 | 7.5–8.5 | 1 | 5.3 Alternatives and evaluation | Compare ORPO/KTO; solve A7; design held-out preference evaluation |

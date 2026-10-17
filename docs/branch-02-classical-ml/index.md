@@ -39,8 +39,8 @@ Treat optional experiments as extensions outside the core budget.
 |---|---|---|---|
 | 1 | 2.1 | 15 min Ridge video; 25 min linear/logistic objectives; 20 min A1–A2 | Ridge solution and logistic gradient |
 | 2 | 2.1 | 10 min forest video; 30 min trees and boosting; 20 min A3 and early-stopping code | Split gain and validation-only stopping |
-| 3 | 2.1 | 15 min PCA video; 25 min PCA, t-SNE, UMAP; 20 min A7 and B2 | Projection and embedding caveats |
-| 4 | 2.1 | 25 min clustering; 35 min B1 and algorithm comparison | Leakage-safe fitted pipeline |
+| 3 | 2.1 | 15 min PCA video; 25 min PCA, t-SNE, UMAP; 20 min B1 | Projection caveats and leakage-safe pipeline |
+| 4 | 2.1 | 25 min clustering; 35 min A7 and B2 | Clustering assumptions and density |
 | 5 | 2.2 | 20 min convexity and optimizers; 7 min cross-validation video; 33 min A8 and B3 | Correct split invariants |
 | 6 | 2.2 | 25 min metrics and calibration; 35 min A4, A6, and B4 | Counts, Brier score, calibrated probabilities |
 | 7 | 2.2 | 20 min bias–variance and drift; 20 min A5; 20 min exit check | Error decomposition and deployment decision |

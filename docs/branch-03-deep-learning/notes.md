@@ -10,7 +10,7 @@ You should be able to explain both its mathematical update and its tensor implem
 **Budget: 3 hours.**
 Primary sources: [Deep Learning](https://www.deeplearningbook.org/), chapters 6 and 8, and [PyTorch autograd](https://docs.pytorch.org/docs/stable/autograd.html).
 Use [D2L](https://d2l.ai/) for another worked treatment of multilayer perceptrons.
-Review [Branch 1 notes, subtopic 1.1: matrix calculus](../branch-01-math-foundations/notes.md) when a dimension or chain rule is unclear.
+Review [Branch 1 notes, subtopic 1.1: matrix algebra and projections](../branch-01-math-foundations/notes.md) when a dimension or chain rule is unclear.
 
 ### Computation graphs and the forward pass
 
@@ -728,10 +728,26 @@ Clipping is a safeguard, not a substitute for finding a persistent source of ins
 ### Dropout as a training-time regularizer
 
 Dropout zeroes each activation independently with probability $p$ during training and scales the survivors by $1/(1-p)$ so the expected activation is unchanged.
+The expectation check is $\mathbb E[\text{masked activation}]=x$: multiplying by $1/(1-p)$ converts a survival probability $1-p$ into an unbiased estimate.
 This is inverted dropout: the training pass carries the correction, so inference needs no adjustment.
 At evaluation time dropout is disabled and acts as the identity.
+For example, activations $(2,0,4)$ with $p=0.5$ and a mask that keeps the first and third entries produce $(4,0,8)$ in training and $(2,0,4)$ at evaluation.
+
+```python
+import torch
+from torch.nn import functional as F
+
+x = torch.tensor([2.0, 0.0, 4.0])
+torch.manual_seed(0)
+train = F.dropout(x, p=0.5, training=True)
+evaluation = F.dropout(x, p=0.5, training=False)
+print(train)       # scaled survivors, zeros where dropped
+print(evaluation)  # identical to x
+```
+
 Transformers apply dropout to attention weights and to sublayer outputs (Branch 4), and LoRA exposes a dropout probability on its adapter path (Branch 5).
 Large language models typically use small values, 0.0 to 0.1, because pretraining data volume already regularizes them.
+The original reference is [Srivastava et al., "Dropout", JMLR 2014](https://jmlr.org/papers/v15/srivastava14a.html).
 
 ### Common pitfalls
 
@@ -879,6 +895,7 @@ Learned weights, nonlinearities, and gaps from dilation affect the effective inf
 ConvNeXt is a convolutional family designed by revisiting ResNet choices with modern training and transformer-era design comparisons.
 Its blocks use a large depthwise spatial convolution, channel-wise normalization, and pointwise channel expansion and contraction.
 The original design uses a $7\times7$ depthwise kernel and GeLU.
+At $C=384$ channels, that depthwise kernel stores $384\cdot7^2=18{,}816$ weights versus $384^2\cdot7^2=7{,}225{,}344$ for a dense $7\times7$ convolution — a 384x reduction — while the pointwise expansion to $4C$ adds $2\cdot384\cdot1536=1{,}179{,}648$ weights.
 It uses LayerNorm rather than BatchNorm in the main design.
 An inverted bottleneck expands channels inside the block and projects back before the residual addition.
 Separate downsampling layers change resolution between stages.
@@ -1060,6 +1077,21 @@ Encode each image with the frozen image tower and normalize it.
 Compute scaled cosine similarities to all class embeddings.
 Choose the highest score or apply softmax across the candidate classes.
 No gradient update is needed for this inference procedure.
+
+```python
+import numpy as np
+
+def zero_shot(image_emb: np.ndarray, class_embs: np.ndarray, scale: float = 100.0) -> np.ndarray:
+    image = image_emb / np.linalg.norm(image_emb)
+    classes = class_embs / np.linalg.norm(class_embs, axis=1, keepdims=True)
+    logits = scale * classes @ image
+    probs = np.exp(logits - logits.max())
+    return probs / probs.sum()
+
+image = np.array([1.0, 0.0, 0.0])
+classes = np.array([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]])
+print(zero_shot(image, classes))  # approximately [1.0, 0.0]
+```
 
 If you use several prompt templates, normalize each text embedding, average within a class, and normalize the resulting class vector again.
 Prompt wording and the candidate label set affect the scores.

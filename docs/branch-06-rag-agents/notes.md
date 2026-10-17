@@ -431,6 +431,10 @@ Lexical retrieval can match exact names but miss semantic equivalents.
 A hybrid system combines their candidate lists before a more expensive ranking stage.
 The main design question is where to spend retrieval and model computation.
 
+The defining objective of retrieval-augmented generation conditions generation on retrieved passages.
+In the original RAG formulation, $p(y\mid x)=\sum_{z\in\mathrm{top-}k}p_\eta(z\mid x)\,p_\eta(y\mid z,x)$, and Lewis et al. train a dense retriever together with a BART generator.
+Modern systems usually freeze the retriever, pass the top passages through the context window, and skip explicit marginalization.
+
 Primary sources: the [RAG paper](https://arxiv.org/abs/2005.11401), [RRF paper](https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf), [HyDE paper](https://arxiv.org/abs/2212.10496), and [Ragas metrics](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/).
 Use [LlamaIndex](https://developers.llamaindex.ai/python/framework/) for integration vocabulary rather than treating a framework abstraction as an evaluation result.
 
@@ -594,7 +598,10 @@ No reranker can select a relevant document that never enters its candidate set.
 If each pair costs an illustrative 3 ms serially, 30 pairs cost about 90 ms before overhead.
 Batching can improve throughput, but request latency depends on hardware, sequence length, and queueing.
 Compare end-to-end p50 and p95 latency, not only model kernel time.
-Use labeled ranking metrics alongside answer-quality measurements: mean reciprocal rank (MRR) averages the inverse rank of the first relevant document, and normalized discounted cumulative gain (nDCG) credits relevant documents near the top of the list more than lower positions.
+Labeled relevance also supports ranking metrics.
+Mean reciprocal rank is $\mathrm{MRR}=\frac1{|Q|}\sum_q \frac{1}{\mathrm{rank}_q}$, where $\mathrm{rank}_q$ is the rank of the first relevant document.
+Discounted cumulative gain at $k$ is $\mathrm{DCG@}k=\sum_{i=1}^{k}\mathrm{rel}_i/\log_2(i+1)$, and $\mathrm{nDCG@}k=\mathrm{DCG@}k/\mathrm{IDCG@}k$ normalizes by the best achievable ordering.
+For a ranking of [miss, miss, hit], $\mathrm{MRR}=1/3$; for relevance [1, 0, 1], $\mathrm{DCG@}3=1+1/2=1.5$, $\mathrm{IDCG@}3=1+1/\log_2 3\approx1.631$, so $\mathrm{nDCG@}3\approx0.92$.
 Record the candidate depth whenever you compare rerankers.
 
 ### Query expansion

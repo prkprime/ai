@@ -297,6 +297,8 @@ $$
 $$
 
 For binary logistic loss using raw margins, $g_i=p_i-y_i$ and $h_i=p_i(1-p_i)$.
+As a check, a leaf with $G=-1.5$, $H=0.5$, $\lambda=1$ gives $w^*=1.0$.
+Splitting it into children with $(G_L,H_L)=(-4,1.2)$ and $(G_R,H_R)=(1,0.8)$, with $\gamma=0.5$, gives $\operatorname{Gain}=0.5(7.273+0.556-3.0)-0.5\approx1.914$.
 These derivatives are with respect to the raw score, not the probability.
 The formula above omits optional L1 leaf penalties and implementation constraints.
 Libraries can reject a positive-gain split if it violates a minimum-child condition.
@@ -473,6 +475,8 @@ Scikit-learn t-SNE has no general out-of-sample `transform` method.
 Uniform Manifold Approximation and Projection, or UMAP, also builds a neighborhood graph.
 A manifold is a space that resembles a low-dimensional Euclidean space locally.
 UMAP estimates local neighborhood scales and converts edges into fuzzy membership strengths.
+Concretely, for a point $a$, let $\rho_a$ be the distance to its nearest neighbor and choose $\sigma_a$ so that $\sum_{b\in N(a)}\exp(-(d(a,b)-\rho_a)/\sigma_a)=\log 2$ over the $k$ nearest neighbors.
+The directed membership weight from $a$ to $b$ is then $\exp(-(d(a,b)-\rho_a)/\sigma_a)$, and UMAP symmetrizes the directed graph before optimizing coordinates.
 It combines directed memberships into an approximately symmetric fuzzy graph.
 It optimizes low-dimensional coordinates so a second fuzzy graph resembles the input graph.
 
@@ -517,6 +521,7 @@ print(labels.shape, len(np.unique(labels)))
 ```
 
 This example demonstrates interfaces, not evidence that three clusters exist in arbitrary data.
+k-means and k-means++ are developed in the next section; here the clustering step only exercises the pipeline interface.
 The generated data explicitly has three centers.
 Assess reconstruction and clustering stability on a real dataset rather than copying this choice.
 
@@ -591,6 +596,7 @@ The linkage criterion defines distance between clusters, not just between indivi
 | Ward | Increase in within-cluster sum of squares | Requires Euclidean geometry; favors compact groups |
 
 Ward's increase is $\frac{|A||B|}{|A|+|B|}\|\bar x_A-\bar x_B\|^2$.
+For points at positions $0,1,5,6$ on a line, single linkage merges $\{0,1\}$ and $\{5,6\}$ at height 1 and joins the clusters at height 4; complete linkage joins them at height 6; Ward merges at heights 0.5, 0.5, and 25.
 Implementations can display a transformed version of this quantity as a dendrogram height.
 Do not compare Ward heights numerically with arbitrary non-Euclidean linkage distances.
 Hierarchical methods can require substantial memory because pairwise relationships grow quadratically.
@@ -961,6 +967,9 @@ In two dimensions, an L1 ball is a diamond with corners on coordinate axes.
 An L2 ball is a circle with a smooth boundary.
 Loss contours expand from the unconstrained optimum until they meet the feasible region.
 Contact with an L1 corner can set a coefficient exactly to zero.
+As a concrete case, minimize $(w_1-2)^2+(w_2-0.5)^2$ subject to $\|w\|_1\le1.5$ or $\|w\|_2\le1.5$.
+The L1 solution is the corner $(1.5,0)$ — sparse.
+The L2 solution projects the unconstrained point onto the circle: $1.5\cdot(2,0.5)/\|(2,0.5)\|\approx(1.455,0.364)$ — dense.
 The L1 subgradient interval at zero gives the algebraic version of this picture.
 L2 shrinkage usually changes all coefficients continuously without making them exactly zero.
 Symmetries or zero correlations can still yield zero L2 coefficients; “never zero” is too strong.

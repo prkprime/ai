@@ -51,7 +51,7 @@ Work the short numeric cases before you open their solutions.
 | 2:00–3:00 | 1 h | 3.1: Initialization and normalization; A2 | Derive the He scale and identify normalization axes. |
 | 3:00–4:00 | 1 h | 3.2: RMSProp, Adam, AdamW, Lion; A5 | Compute one adaptive update without a library. |
 | 4:00–5:00 | 1 h | 3.2: Warmup, cosine, 1Cycle, precision; B2 | Demonstrate overflow and inspect finite gradients. |
-| 5:00–5:30 | 0.5 h | 3.2: Residuals, clipping, diagnosis | Order unscale, clip, step, and scaler update. |
+| 5:00–5:30 | 0.5 h | 3.2: Dropout, residuals, clipping, diagnosis | Order unscale, clip, step, and scaler update. |
 | 5:30–6:30 | 1 h | 3.3: Convolutions and ConvNeXt; A4 and A6 | Recompute parameters, operations, and receptive field. |
 | 6:30–7:30 | 1 h | 3.3: ViT and cross-attention; B3 | Run a tiny image encoder and inspect token shapes. |
 | 7:30–8:00 | 0.5 h | 3.3: CLIP and zero-shot classification; B4 | Compute the contrastive loss and class predictions. |

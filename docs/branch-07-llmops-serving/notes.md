@@ -348,6 +348,8 @@ $$
 The scale and zero point also require storage.
 Per-group quantization uses one set of metadata for a group of weights.
 Smaller groups can improve reconstruction but consume more metadata and may change kernel efficiency.
+For example, symmetric INT8 with $s=1/127$, $z=0$, and $x=0.73$ gives $q=\operatorname{round}(92.71)=93$ and $\hat x=93/127\approx0.7323$, an error of $0.0023$.
+For a 70B model with groups of 128 weights, metadata is $70\times10^9/128=546{,}875{,}000$ scale-and-zero-point pairs; at 2 bytes each that is about $1.09$ GB on top of the 35 GB payload.
 The weight precision does not automatically set the activation or cache precision.
 
 #### AWQ versus GPTQ
@@ -373,6 +375,7 @@ Measure tool-call validity and long-context behavior as well as average benchmar
 
 **Dynamic activation quantization** computes activation scales from runtime inputs rather than fixing every activation scale during calibration.
 INT8 paths may quantize matrix inputs at runtime while retaining special treatment for activation outliers.
+Outlier features can be orders of magnitude larger than typical activations; LLM.int8-style paths keep those channels in higher precision rather than letting one channel widen the scale for every channel.
 This adds scale computation and conversion work that a performance comparison must include.
 Weight-only four-bit paths often dequantize or use fused kernels while activations remain in FP16/BF16.
 
@@ -395,6 +398,7 @@ The **k-quants** use block or super-block layouts with scale metadata.
 
 Names such as `Q4_K_M` identify a quantization recipe, not exactly four bits for every stored parameter.
 Different tensors can use different quantized types, and metadata increases effective bits per weight.
+For example, `Q4_K_M` averages roughly 4.8 effective bits per weight, so an 8B model is about 4.8 GB at that recipe versus the 4.0 GB INT4 floor in the table above.
 The `M` recipe generally retains higher precision for selected tensors than its smaller alternative.
 Inspect the actual artifact size and llama.cpp metadata rather than deriving exact residency from the name.
 
@@ -742,6 +746,7 @@ Request-count quotas alone do not constrain the cost of long-context generations
 A **token bucket** rate limiter stores up to $C$ credits and refills at rate $r$ credits per second.
 After $\Delta t$ seconds, update $c\leftarrow\min(C,c+r\Delta t)$.
 Admit work only if enough credits remain for its charged amount.
+With $C=600$ and $r=10$ credits per second, a client that spends 240 credits has 360 left; after 10 s idle the bucket holds $\min(600,460)=460$, so a 500-credit request is rejected, and 5 s later it holds 510 and the same request is admitted.
 A production implementation must update shared state atomically across gateway replicas.
 An in-process dictionary alone cannot enforce a global tenant quota.
 

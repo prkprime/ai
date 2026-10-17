@@ -27,7 +27,7 @@ The problems give file names and execution commands for the multi-file examples.
 
 ## 1.1 Vector calculus & linear algebra
 
-Allocate three hours to this section and its exercises.
+Allocate three hours to this section and problems A1–A3 and B1.
 Primary references are [MML](https://mml-book.github.io/), chapters 2–5, and the [Stanford linear algebra review](https://cs229.stanford.edu/section/cs229-linalg.pdf).
 The numerical conventions follow NumPy's [SVD reference](https://numpy.org/doc/stable/reference/generated/numpy.linalg.svd.html).
 
@@ -393,6 +393,7 @@ A discrete variable has a probability mass function, or PMF, $p(x)$ with $\sum_x
 A continuous variable has a probability density function, or PDF, $f(x)$ with $\int f(x)\,dx=1$.
 For a continuous variable, probability belongs to intervals: $P(a\le X\le b)=\int_a^b f(x)\,dx$.
 A density value can exceed one; an event probability cannot.
+For a standard Gaussian, $f(1)\approx0.2420$ while $P(X>1)\approx0.1587$; the density value is not a probability.
 The probability of any one point under a continuous density is zero.
 
 A Bernoulli variable takes values zero and one:
@@ -788,6 +789,26 @@ flowchart TD
     N -->|No| P["Evaluate process pool and transfer cost"]
 ```
 
+```python
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
+from time import perf_counter
+
+def add_one(value: int) -> int:
+    return value + 1
+
+def time_pool(pool, label: str) -> None:
+    started = perf_counter()
+    with pool as executor:
+        total = sum(executor.map(add_one, range(64)))
+    print(f"{label}: {perf_counter() - started:.4f}s checksum={total}")
+
+time_pool(ThreadPoolExecutor(max_workers=4), "threads")
+if __name__ == "__main__":
+    time_pool(ProcessPoolExecutor(max_workers=4), "processes")
+```
+
+On this tiny workload the process pool usually loses to the sequential loop by orders of magnitude; rerun with larger per-item work before drawing a conclusion.
+
 This decision tree is a starting hypothesis, not a benchmark result.
 Processes can lose to sequential execution on tiny tasks because serialization and startup dominate.
 Avoid launching one worker per input row.
@@ -917,6 +938,26 @@ The kernel receives arrays and returns a value.
 Infrastructure code loads artifacts, records metrics, and performs I/O.
 Dependency direction should keep the kernel independent of the web framework and artifact store.
 Problem B4 demonstrates the boundary-to-kernel seam without requiring a service framework.
+
+```python
+from typing import Protocol
+import numpy as np
+from pydantic import BaseModel, ConfigDict, Field
+
+class Weights(Protocol):
+    def dot(self, x: np.ndarray) -> float: ...
+
+class Request(BaseModel):
+    model_config = ConfigDict(extra="forbid", strict=True)
+    features: list[float] = Field(min_length=3, max_length=3)
+
+def predict(weights: Weights, x: np.ndarray) -> float:   # kernel
+    return weights.dot(x)
+
+def handle(body: dict, weights: Weights) -> float:       # adapter
+    request = Request.model_validate(body)
+    return predict(weights, np.asarray(request.features, dtype=np.float64))
+```
 
 Type hints document interfaces and let a static checker catch many incompatible calls.
 Python does not enforce annotations at runtime.
