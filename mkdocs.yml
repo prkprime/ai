@@ -1,0 +1,76 @@
+site_name: 60-Hour AI/LLM Engineering Syllabus
+site_url: https://prkprime.dev/ai/
+repo_url: https://github.com/prkprime/ai
+site_description: Source-backed study path from mathematical foundations to production LLM systems
+docs_dir: docs
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - toc.follow
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.arithmatex:
+      generic: true
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+  - https://unpkg.com/mermaid@10/dist/mermaid.min.js
+nav:
+  - Home: index.md
+  - "Branch 1 — Mathematical Foundations & Production Engineering":
+      - Overview: branch-01-math-foundations/index.md
+      - Notes: branch-01-math-foundations/notes.md
+      - Problems: branch-01-math-foundations/problems.md
+  - "Branch 2 — Classical Statistical & Machine Learning":
+      - Overview: branch-02-classical-ml/index.md
+      - Notes: branch-02-classical-ml/notes.md
+      - Problems: branch-02-classical-ml/problems.md
+  - "Branch 3 — Deep Learning Foundations & Representation Learning":
+      - Overview: branch-03-deep-learning/index.md
+      - Notes: branch-03-deep-learning/notes.md
+      - Problems: branch-03-deep-learning/problems.md
+  - "Branch 4 — Transformers & Modern NLP":
+      - Overview: branch-04-transformers-nlp/index.md
+      - Notes: branch-04-transformers-nlp/notes.md
+      - Problems: branch-04-transformers-nlp/problems.md
+  - "Branch 5 — LLM Engineering & Fine-Tuning":
+      - Overview: branch-05-llm-fine-tuning/index.md
+      - Notes: branch-05-llm-fine-tuning/notes.md
+      - Problems: branch-05-llm-fine-tuning/problems.md
+  - "Branch 6 — RAG & Agentic Workflows":
+      - Overview: branch-06-rag-agents/index.md
+      - Notes: branch-06-rag-agents/notes.md
+      - Problems: branch-06-rag-agents/problems.md
+  - "Branch 7 — LLMOps, High-Throughput Serving & Systems":
+      - Overview: branch-07-llmops-serving/index.md
+      - Notes: branch-07-llmops-serving/notes.md
+      - Problems: branch-07-llmops-serving/problems.md
+  - "Branch 8 — AI Safety, Red Teaming & Governance":
+      - Overview: branch-08-ai-safety/index.md
+      - Notes: branch-08-ai-safety/notes.md
+      - Problems: branch-08-ai-safety/problems.md
+  - References: references.md
