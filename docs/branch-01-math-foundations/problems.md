@@ -18,43 +18,43 @@ Show that the projector is symmetric and idempotent, meaning $P^\top=P$ and $P^2
 <details markdown="1">
 <summary>Solution</summary>
 
-1. Expand the objective:
+**1.** Expand the objective:
 
-   $$
-   f(c)=b^\top b-2c\,a^\top b+c^2a^\top a.
-   $$
+$$
+f(c)=b^\top b-2c\,a^\top b+c^2a^\top a.
+$$
 
-2. Differentiate and solve:
+**2.** Differentiate and solve:
 
-   $$
-   f'(c)=-2a^\top b+2c\,a^\top a=0,
-   \qquad c=\frac{a^\top b}{a^\top a}.
-   $$
+$$
+f'(c)=-2a^\top b+2c\,a^\top a=0,
+\qquad c=\frac{a^\top b}{a^\top a}.
+$$
 
-   Here $a^\top b=3+2=5$ and $a^\top a=1+4=5$, so $c=1$.
+Here $a^\top b=3+2=5$ and $a^\top a=1+4=5$, so $c=1$.
 
-3. Construct the matrix:
+**3.** Construct the matrix:
 
-   $$
-   P=\frac{aa^\top}{a^\top a}
-   =\frac15\begin{bmatrix}1&2\\2&4\end{bmatrix}.
-   $$
+$$
+P=\frac{aa^\top}{a^\top a}
+=\frac15\begin{bmatrix}1&2\\2&4\end{bmatrix}.
+$$
 
-4. Multiply by $b$ to get $Pb=(1,2)^\top$.
-   The residual is $r=b-Pb=(2,-1)^\top$.
-   Its squared norm is $2^2+(-1)^2=5$.
-   Orthogonality holds because $a^\top r=2-2=0$.
+**4.** Multiply by $b$ to get $Pb=(1,2)^\top$.
+The residual is $r=b-Pb=(2,-1)^\top$.
+Its squared norm is $2^2+(-1)^2=5$.
+Orthogonality holds because $a^\top r=2-2=0$.
 
-5. Symmetry follows from $(aa^\top)^\top=aa^\top$.
-   For idempotence,
+**5.** Symmetry follows from $(aa^\top)^\top=aa^\top$.
+For idempotence,
 
-   $$
-   P^2=\frac{aa^\top aa^\top}{(a^\top a)^2}
-   =\frac{a(a^\top a)a^\top}{(a^\top a)^2}=P.
-   $$
+$$
+P^2=\frac{aa^\top aa^\top}{(a^\top a)^2}
+=\frac{a(a^\top a)a^\top}{(a^\top a)^2}=P.
+$$
 
-6. The second derivative is $f''(c)=2a^\top a=10>0$.
-   Thus the stationary point is the unique minimizing coefficient.
+**6.** The second derivative is $f''(c)=2a^\top a=10>0$.
+Thus the stationary point is the unique minimizing coefficient.
 
 </details>
 
@@ -68,45 +68,45 @@ Explain why the eigenvalues and singular values coincide for this matrix.
 <details markdown="1">
 <summary>Solution</summary>
 
-1. Solve the characteristic equation:
+**1.** Solve the characteristic equation:
 
-   $$
-   \det(C-\lambda I)=(2-\lambda)^2-1
-   =\lambda^2-4\lambda+3=(\lambda-3)(\lambda-1)=0.
-   $$
+$$
+\det(C-\lambda I)=(2-\lambda)^2-1
+=\lambda^2-4\lambda+3=(\lambda-3)(\lambda-1)=0.
+$$
 
-   The eigenvalues are 3 and 1.
+The eigenvalues are 3 and 1.
 
-2. For $\lambda=3$, $(C-3I)v=0$ gives $v_1=v_2$.
-   Choose $q_1=(1,1)^\top/\sqrt2$.
-   For $\lambda=1$, $(C-I)v=0$ gives $v_1=-v_2$.
-   Choose $q_2=(1,-1)^\top/\sqrt2$.
+**2.** For $\lambda=3$, $(C-3I)v=0$ gives $v_1=v_2$.
+Choose $q_1=(1,1)^\top/\sqrt2$.
+For $\lambda=1$, $(C-I)v=0$ gives $v_1=-v_2$.
+Choose $q_2=(1,-1)^\top/\sqrt2$.
 
-3. The vectors have norm one and dot product zero.
-   Let $Q=[q_1\ q_2]$.
-   Then $Q^\top Q=I$ and $C=Q\operatorname{diag}(3,1)Q^\top$.
+**3.** The vectors have norm one and dot product zero.
+Let $Q=[q_1\ q_2]$.
+Then $Q^\top Q=I$ and $C=Q\operatorname{diag}(3,1)Q^\top$.
 
-4. Set $U=Q$, $\Sigma=\operatorname{diag}(3,1)$, and $V=Q$.
-   This is an SVD because both factors are orthogonal and the diagonal entries are nonnegative and sorted.
-   It works because $C$ is symmetric positive definite.
-   For an indefinite symmetric matrix, signed eigenvalues would not directly form an SVD diagonal.
+**4.** Set $U=Q$, $\Sigma=\operatorname{diag}(3,1)$, and $V=Q$.
+This is an SVD because both factors are orthogonal and the diagonal entries are nonnegative and sorted.
+It works because $C$ is symmetric positive definite.
+For an indefinite symmetric matrix, signed eigenvalues would not directly form an SVD diagonal.
 
-5. Keep the leading singular component:
+**5.** Keep the leading singular component:
 
-   $$
-   C_1=3q_1q_1^\top
-   =\frac32\begin{bmatrix}1&1\\1&1\end{bmatrix}.
-   $$
+$$
+C_1=3q_1q_1^\top
+=\frac32\begin{bmatrix}1&1\\1&1\end{bmatrix}.
+$$
 
-6. The residual is
+**6.** The residual is
 
-   $$
-   C-C_1=\begin{bmatrix}0.5&-0.5\\-0.5&0.5\end{bmatrix}.
-   $$
+$$
+C-C_1=\begin{bmatrix}0.5&-0.5\\-0.5&0.5\end{bmatrix}.
+$$
 
-   Its squared Frobenius norm is $4(0.5^2)=1$.
-   This equals the square of the omitted singular value.
-   The rank-one approximation is optimal under this norm.
+Its squared Frobenius norm is $4(0.5^2)=1$.
+This equals the square of the omitted singular value.
+The rank-one approximation is optimal under this norm.
 
 </details>
 
@@ -120,46 +120,46 @@ State the gradient shape for $Q$ if an attention head uses $Q:(2,3)$, $K:(4,3)$,
 <details markdown="1">
 <summary>Solution</summary>
 
-1. Matrix multiplication gives $z=(0,0)$.
-   Both exponentials equal one, so $p=(1/2,1/2)$.
-   The loss is $-\log(1/2)=\log2\approx0.693147$.
+**1.** Matrix multiplication gives $z=(0,0)$.
+Both exponentials equal one, so $p=(1/2,1/2)$.
+The loss is $-\log(1/2)=\log2\approx0.693147$.
 
-2. Write $Z=\sum_k e^{z_k}$ and apply the quotient rule:
+**2.** Write $Z=\sum_k e^{z_k}$ and apply the quotient rule:
 
-   $$
-   \frac{\partial p_i}{\partial z_j}
-   =\frac{\delta_{ij}e^{z_i}Z-e^{z_i}e^{z_j}}{Z^2}
-   =p_i(\delta_{ij}-p_j).
-   $$
+$$
+\frac{\partial p_i}{\partial z_j}
+=\frac{\delta_{ij}e^{z_i}Z-e^{z_i}e^{z_j}}{Z^2}
+=p_i(\delta_{ij}-p_j).
+$$
 
-3. Use $L=-\sum_i t_i\log p_i$ and the chain rule:
+**3.** Use $L=-\sum_i t_i\log p_i$ and the chain rule:
 
-   $$
-   \frac{\partial L}{\partial z_j}
-   =-\sum_i\frac{t_i}{p_i}p_i(\delta_{ij}-p_j)
-   =-t_j+p_j\sum_i t_i=p_j-t_j.
-   $$
+$$
+\frac{\partial L}{\partial z_j}
+=-\sum_i\frac{t_i}{p_i}p_i(\delta_{ij}-p_j)
+=-t_j+p_j\sum_i t_i=p_j-t_j.
+$$
 
-   Thus the row-shaped upstream gradient is $G_z=[-1/2,1/2]$.
-   Its entries sum to zero, as required by invariance to a shared logit offset.
+Thus the row-shaped upstream gradient is $G_z=[-1/2,1/2]$.
+Its entries sum to zero, as required by invariance to a shared logit offset.
 
-4. Expand $z_j=\sum_aX_aW_{aj}$.
-   Then $\partial L/\partial W_{aj}=X_a(G_z)_j$.
-   Therefore
+**4.** Expand $z_j=\sum_aX_aW_{aj}$.
+Then $\partial L/\partial W_{aj}=X_a(G_z)_j$.
+Therefore
 
-   $$
-   \nabla_WL=X^\top G_z
-   =\begin{bmatrix}-1/2&1/2\\-1&1\end{bmatrix}.
-   $$
+$$
+\nabla_WL=X^\top G_z
+=\begin{bmatrix}-1/2&1/2\\-1&1\end{bmatrix}.
+$$
 
-   The gradient shape is $(2,2)$, matching $W$.
-   Since $W=0$, the input gradient $G_zW^\top$ is zero at this particular point.
+The gradient shape is $(2,2)$, matching $W$.
+Since $W=0$, the input gradient $G_zW^\top$ is zero at this particular point.
 
-5. For attention, $S$ and $P$ have shape $(2,4)$ and $O$ has shape $(2,5)$.
-   An upstream $G_O:(2,5)$ gives $G_P=G_OV^\top:(2,4)$.
-   Row-softmax differentiation preserves shape $(2,4)$.
-   Thus $G_Q=G_SK/\sqrt3$ has shape $(2,3)$, matching $Q$.
-   Also $G_K:(4,3)$ and $G_V:(4,5)$.
+**5.** For attention, $S$ and $P$ have shape $(2,4)$ and $O$ has shape $(2,5)$.
+An upstream $G_O:(2,5)$ gives $G_P=G_OV^\top:(2,4)$.
+Row-softmax differentiation preserves shape $(2,4)$.
+Thus $G_Q=G_SK/\sqrt3$ has shape $(2,3)$, matching $Q$.
+Also $G_K:(4,3)$ and $G_V:(4,5)$.
 
 </details>
 
@@ -174,39 +174,39 @@ Explain why the variance MLE differs from the unbiased sample variance.
 <details markdown="1">
 <summary>Solution</summary>
 
-1. The Bernoulli sample has $n=5$ and $s=3$ successes.
-   Its likelihood is $\theta^3(1-\theta)^2$.
-   The derivative of the log-likelihood is $3/\theta-2/(1-\theta)$.
-   Setting it to zero gives $3(1-\theta)=2\theta$, hence $\hat\theta=3/5=0.6$.
-   The second derivative $-3/\theta^2-2/(1-\theta)^2$ is negative in the interior.
+**1.** The Bernoulli sample has $n=5$ and $s=3$ successes.
+Its likelihood is $\theta^3(1-\theta)^2$.
+The derivative of the log-likelihood is $3/\theta-2/(1-\theta)$.
+Setting it to zero gives $3(1-\theta)=2\theta$, hence $\hat\theta=3/5=0.6$.
+The second derivative $-3/\theta^2-2/(1-\theta)^2$ is negative in the interior.
 
-2. The Beta$(2,2)$ prior contributes $\theta(1-\theta)$.
-   The posterior density is proportional to $\theta^4(1-\theta)^3$.
-   Its log derivative is $4/\theta-3/(1-\theta)$.
-   Set it to zero to get $4(1-\theta)=3\theta$, or $\hat\theta_{\mathrm{MAP}}=4/7$.
-   Both posterior shape parameters, 5 and 4, exceed one, so the interior-mode formula applies.
-   The posterior mean is $5/9$, not $4/7$.
+**2.** The Beta$(2,2)$ prior contributes $\theta(1-\theta)$.
+The posterior density is proportional to $\theta^4(1-\theta)^3$.
+Its log derivative is $4/\theta-3/(1-\theta)$.
+Set it to zero to get $4(1-\theta)=3\theta$, or $\hat\theta_{\mathrm{MAP}}=4/7$.
+Both posterior shape parameters, 5 and 4, exceed one, so the interior-mode formula applies.
+The posterior mean is $5/9$, not $4/7$.
 
-3. For Gaussian data, write $v=\sigma^2$:
+**3.** For Gaussian data, write $v=\sigma^2$:
 
-   $$
-   \ell(\mu,v)=-\frac32\log(2\pi v)
-   -\frac{(1-\mu)^2+(2-\mu)^2+(3-\mu)^2}{2v}.
-   $$
+$$
+\ell(\mu,v)=-\frac32\log(2\pi v)
+-\frac{(1-\mu)^2+(2-\mu)^2+(3-\mu)^2}{2v}.
+$$
 
-   Differentiation in $\mu$ yields $(6-3\mu)/v=0$, so $\hat\mu=2$.
+Differentiation in $\mu$ yields $(6-3\mu)/v=0$, so $\hat\mu=2$.
 
-4. At this mean, the squared residual sum is $1+0+1=2$.
-   Differentiation in $v$ yields $-3/(2v)+2/(2v^2)=0$.
-   Therefore $\hat v=2/3$.
-   The unbiased sample variance divides by $n-1=2$ and equals 1.
-   Estimating the mean consumes one degree of freedom; the MLE criterion does not correct for this bias.
+**4.** At this mean, the squared residual sum is $1+0+1=2$.
+Differentiation in $v$ yields $-3/(2v)+2/(2v^2)=0$.
+Therefore $\hat v=2/3$.
+The unbiased sample variance divides by $n-1=2$ and equals 1.
+Estimating the mean consumes one degree of freedom; the MLE criterion does not correct for this bias.
 
-5. With known variance 1 and prior variance 1, the log posterior in $\mu$ adds $-\mu^2/2$.
-   Its derivative is $(6-3\mu)-\mu=6-4\mu$.
-   Thus $\hat\mu_{\mathrm{MAP}}=1.5$.
-   The second derivative is $-4$, so this point is the unique maximum.
-   The prior pulls the estimate from 2 toward its prior mean 0.
+**5.** With known variance 1 and prior variance 1, the log posterior in $\mu$ adds $-\mu^2/2$.
+Its derivative is $(6-3\mu)-\mu=6-4\mu$.
+Thus $\hat\mu_{\mathrm{MAP}}=1.5$.
+The second derivative is $-4$, so this point is the unique maximum.
+The prior pulls the estimate from 2 toward its prior mean 0.
 
 </details>
 
@@ -220,44 +220,44 @@ State what changes if $q$ assigns zero probability to the second outcome.
 <details markdown="1">
 <summary>Solution</summary>
 
-1. Entropy is
+**1.** Entropy is
 
-   $$
-   H(p)=-2(0.5\log0.5)=\log2\approx0.693147.
-   $$
+$$
+H(p)=-2(0.5\log0.5)=\log2\approx0.693147.
+$$
 
-2. Cross-entropy is
+**2.** Cross-entropy is
 
-   $$
-   H(p,q)=-0.5\log0.75-0.5\log0.25
-   =0.143841+0.693147\approx0.836988.
-   $$
+$$
+H(p,q)=-0.5\log0.75-0.5\log0.25
+=0.143841+0.693147\approx0.836988.
+$$
 
-3. Forward KL is
+**3.** Forward KL is
 
-   $$
-   D_{\mathrm{KL}}(p\|q)
-   =0.5\log(2/3)+0.5\log2
-   =0.5\log(4/3)\approx0.143841.
-   $$
+$$
+D_{\mathrm{KL}}(p\|q)
+=0.5\log(2/3)+0.5\log2
+=0.5\log(4/3)\approx0.143841.
+$$
 
-4. Summing entropy and forward KL gives $0.693147+0.143841=0.836988$ after rounding.
-   This agrees with cross-entropy.
-   Algebraically, split $\log(p_i/q_i)$ into $\log p_i-\log q_i$ and collect the two sums.
+**4.** Summing entropy and forward KL gives $0.693147+0.143841=0.836988$ after rounding.
+This agrees with cross-entropy.
+Algebraically, split $\log(p_i/q_i)$ into $\log p_i-\log q_i$ and collect the two sums.
 
-5. Reverse KL is
+**5.** Reverse KL is
 
-   $$
-   D_{\mathrm{KL}}(q\|p)
-   =0.75\log1.5+0.25\log0.5
-   \approx0.304099-0.173287=0.130812.
-   $$
+$$
+D_{\mathrm{KL}}(q\|p)
+=0.75\log1.5+0.25\log0.5
+\approx0.304099-0.173287=0.130812.
+$$
 
-   It differs from the forward KL, so KL is not a distance metric with symmetry.
+It differs from the forward KL, so KL is not a distance metric with symmetry.
 
-6. If $q_2=0$ while $p_2=0.5$, the second cross-entropy term is infinite.
-   Forward KL is also infinite.
-   Silently clipping probabilities changes the evaluated model; report any numerical clipping policy rather than treating it as the exact quantity.
+**6.** If $q_2=0$ while $p_2=0.5$, the second cross-entropy term is infinite.
+Forward KL is also infinite.
+Silently clipping probabilities changes the evaluated model; report any numerical clipping policy rather than treating it as the exact quantity.
 
 </details>
 
@@ -272,30 +272,30 @@ Also compute the variance of a Bernoulli variable with success probability $1/4$
 <details markdown="1">
 <summary>Solution</summary>
 
-1. The total NLL is
+**1.** The total NLL is
 
-   $$
-   -\log(1/2)-\log(1/4)-\log(1/8)
-   =\log2+\log4+\log8=\log64\approx4.158883.
-   $$
+$$
+-\log(1/2)-\log(1/4)-\log(1/8)
+=\log2+\log4+\log8=\log64\approx4.158883.
+$$
 
-2. Divide by three tokens to get mean NLL $\log4\approx1.386294$.
-   Exponentiation gives perplexity 4.
-   Equivalently, the product probability is $1/64$ and its inverse cube root is 4.
+**2.** Divide by three tokens to get mean NLL $\log4\approx1.386294$.
+Exponentiation gives perplexity 4.
+Equivalently, the product probability is $1/64$ and its inverse cube root is 4.
 
-3. The first sequence has perplexity 2.
-   The second has mean NLL $(\log4+\log8)/2=\log\sqrt{32}$ and perplexity $\sqrt{32}\approx5.656854$.
-   Their arithmetic average is about $3.828427$, not 4.
-   Corpus perplexity first sums token NLLs, divides by total token count, and then exponentiates.
-   Equal weighting of sequence perplexities applies a different weighting and a nonlinear transformation in the wrong order.
+**3.** The first sequence has perplexity 2.
+The second has mean NLL $(\log4+\log8)/2=\log\sqrt{32}$ and perplexity $\sqrt{32}\approx5.656854$.
+Their arithmetic average is about $3.828427$, not 4.
+Corpus perplexity first sums token NLLs, divides by total token count, and then exponentiates.
+Equal weighting of sequence perplexities applies a different weighting and a nonlinear transformation in the wrong order.
 
-4. For Bernoulli $X$, $X^2=X$ and $\mathbb EX=1/4$.
-   Thus
+**4.** For Bernoulli $X$, $X^2=X$ and $\mathbb EX=1/4$.
+Thus
 
-   $$
-   \operatorname{Var}(X)=\mathbb E[X^2]-(\mathbb EX)^2
-   =\frac14-\frac1{16}=\frac3{16}=0.1875.
-   $$
+$$
+\operatorname{Var}(X)=\mathbb E[X^2]-(\mathbb EX)^2
+=\frac14-\frac1{16}=\frac3{16}=0.1875.
+$$
 
 </details>
 
